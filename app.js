@@ -21,6 +21,11 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         io.emit('message', '유저가 나갔습니다.');
     })
+
+    // Listen for chatMessage
+    socket.on('chatMessage', msg => {
+        io.emit('message', msg);
+    })
 });
 
 server.listen(3000, () => console.log('Server running on port 3000'));

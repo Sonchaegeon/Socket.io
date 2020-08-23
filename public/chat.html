@@ -6,6 +6,13 @@
     <title>Chat | ChatDSM</title>
 </head>
 <body>
+
+    <div class="chat-messages">
+    </div>
+    <form id="chat-form">
+        <input type="text" id="msg" placeholder="Enter Message" required autocomplete="off">
+        <button class="btn">Send</button>
+    </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/main.js"></script>
 </body>
