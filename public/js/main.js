@@ -1,7 +1,14 @@
 var chatForm = document.getElementById('chat-form');
 var chatMessages = document.querySelector('.chat-massages');
 
+var username = Qs.parse(location.search, {
+    ignoreQueryPrefix: true
+});
+
 var socket = io();
+
+// Join chatroom
+socket.emit('joinRoom', username);
 
 // Server에서 받은 메세지
 socket.on('message', message => {
