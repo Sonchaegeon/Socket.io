@@ -1,4 +1,5 @@
 var chatForm = document.getElementById('chat-form');
+var chatMessages = document.querySelector('.chat-massages');
 
 var socket = io();
 
@@ -17,6 +18,10 @@ chatForm.addEventListener('submit', (e) => {
 
     // 서버로 message emit
     socket.emit('chatMessage', msg);
+
+    // Clear input
+    e.target.elements.msg.value = '';
+    e.target.elements.msg.focus();
 })
 
 // DOM으로 message 보내기
@@ -24,8 +29,8 @@ function outputMessage(message){
     const div = document.createElement('div');
     div.classList.add('message');
     div.innerHTML = `
-        <p>asda</p>
-        <p>${message}</p>
+        <p>${message.username} <span>${message.time}</span></p>
+        <p>${message.text}</p>
     `;
     document.querySelector('.chat-messages').appendChild(div);
 }
