@@ -4,7 +4,7 @@
   "description": "Socket.io Project",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/app.js\""
   },
   "repository": {
     "type": "git",
