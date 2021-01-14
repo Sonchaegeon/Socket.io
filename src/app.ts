@@ -18,6 +18,11 @@ mongoose.connection.once('open', () => {
     console.log("DB Connected");
 })
 
+// Model
+import "./models/User";
+import "./models/Chatroom";
+import "./models/Message";
+
 const app: Express = express();
 
 app.use(express.json());
