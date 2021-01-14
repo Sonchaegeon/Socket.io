@@ -12,7 +12,11 @@ export const register: BusinessLogic = async(req, res, next) => {
     const emailRegex: RegExp = /@gmail.com/;
     
     if(!emailRegex.test(email)) throw new HttpError(400, "Email is not supported from your domain");
-    if(password > 6) throw new HttpError(400, "Password must be atleast 6 characters long");
+    if(password.length < 6) throw new HttpError(400, "Password must be atleast 6 characters long");
+
+    const userExists = await User.findOne({ email });
+
+    if(userExists) throw new HttpError(400, "User with same email already exists");
 
     const user = new User({ 
         name,
@@ -36,7 +40,7 @@ export const login: BusinessLogic = async(req, res, next) => {
 
     if(!user) throw new HttpError(400 , "Email and Password did not match");
 
-    const token = jwt.sign({id: user.id}, process.env.JWT_SECRET as string);
+    const token = await jwt.sign({id: user.id}, process.env.JWT_SECRET as string);
 
     return res.json({
         message: "User logged in successfully!",
