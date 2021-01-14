@@ -26,6 +26,7 @@ import "./models/Message";
 
 // Routes
 import userRouter from "./routers/user";
+import chatroomRouter from "./routers/chatroom";
 
 const app: Express = express();
 
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRouter);
+app.use('/chatroom', chatroomRouter);
 
 // Error Handle
 app.use((req: Request, res: Response, next: NextFunction) => {
