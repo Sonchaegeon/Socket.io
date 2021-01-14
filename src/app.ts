@@ -32,7 +32,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(userRouter);
+app.use('/user', userRouter);
 
 // Error Handle
 app.use((req: Request, res: Response, next: NextFunction) => {
