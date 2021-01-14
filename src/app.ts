@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { HttpError } from "./types/HttpError";
 
+// Database connect
 import mongoose from "mongoose";
 mongoose.connect(process.env.DATABASE as string, {
     useNewUrlParser: true,
@@ -23,11 +24,15 @@ import "./models/User";
 import "./models/Chatroom";
 import "./models/Message";
 
+// Routes
+import userRouter from "./routers/user";
+
 const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(userRouter);
 
 // Error Handle
 app.use((req: Request, res: Response, next: NextFunction) => {
