@@ -1,8 +1,9 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
-import { HttpError } from "./types/HttpError";
+import { HttpError, Payload } from "./types/HttpError";
 
 // Database connect
 import mongoose from "mongoose";
@@ -27,6 +28,7 @@ import "./models/Message";
 // Routes
 import userRouter from "./routers/user";
 import chatroomRouter from "./routers/chatroom";
+import { Socket } from 'socket.io';
 
 const app: Express = express();
 
@@ -49,6 +51,25 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     })
 })
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
     console.log("Server running on port 3000");
+})
+
+const io: Socket = require('socket.io')(server);
+
+io.use( async (socket: Socket | any, next: NextFunction | any) => {
+    try{
+        const token = socket.handshake.query.token;    
+        const payload: Payload | any = await jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = payload.id;
+        next();
+    } catch(err) {}
+})
+
+io.on('connection', (socket) => {
+    console.log('connected: ' + socket.userId);
+
+    socket.on('disconnect', () => {
+        console.log("Disconnected: " + socket.userId);
+    })
 })
