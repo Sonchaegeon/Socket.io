@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 import { HttpError, Payload } from "./types/HttpError";
@@ -34,7 +35,7 @@ const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(require('cors')());
+app.use(cors());
 
 app.use('/user', userRouter);
 app.use('/chatroom', chatroomRouter);
@@ -56,14 +57,19 @@ const server = app.listen(3000, () => {
     console.log("Server running on port 3000");
 })
 
-const io: Socket = require('socket.io')(server);
+const io: Socket = require('socket.io')(server, {
+    cors: {
+        origin: '*',
+    }
+});
 
 io.use( async (socket: Socket | any, next: NextFunction | any) => {
     try{
-        const token = socket.handshake.query.token;    
-        const payload: Payload | any = await jwt.verify(token, process.env.JWT_SECRET);
-        socket.userId = payload.id;
-        next();
+        const token = socket.handshake.query.token;
+        jwt.verify(token, process.env.JWT_SECRET, (err: Error, payload: Payload) => {
+            socket.userId = payload.id;
+            next();
+        });
     } catch(err) {}
 })
 
