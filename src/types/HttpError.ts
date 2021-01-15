@@ -7,3 +7,8 @@ export class HttpError extends Error {
         this.status = status;
     }
 }
+
+export interface Payload {
+    id?: any,
+    iat: number
+}
