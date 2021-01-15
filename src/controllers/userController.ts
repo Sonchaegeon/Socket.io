@@ -33,7 +33,7 @@ export const register: BusinessLogic = async(req, res, next) => {
 
 export const login: BusinessLogic = async(req, res, next) => {
     const {email, password} = req.body;
-    const user = await User.find({
+    const user = await User.findOne({
         email, 
         password: sha256(password + process.env.SALT as string)
     });
