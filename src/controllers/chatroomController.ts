@@ -21,3 +21,9 @@ export const createChatroom = async (req: Request, res: Response) => {
         message: "Chatroom created!",
     });
 }
+
+export const getAllChatroom = async (req: Request, res: Response) => {
+    const chatrooms = await Chatroom.find({});
+
+    res.json(chatrooms);
+}

@@ -10,7 +10,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         const payload = await jwt.verify(token, process.env.JWT_SECRET);
         
         req.payload = payload;
-
         next();
     } catch (err) {
         return res.status(401).json({
