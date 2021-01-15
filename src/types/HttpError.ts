@@ -8,7 +8,6 @@ export class HttpError extends Error {
     }
 }
 
-export interface Payload {
-    id?: any,
-    iat: number
+export interface Payload extends Object {
+    [key: string]: any
 }
