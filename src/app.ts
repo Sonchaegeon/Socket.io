@@ -34,6 +34,7 @@ const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(require('cors')());
 
 app.use('/user', userRouter);
 app.use('/chatroom', chatroomRouter);
