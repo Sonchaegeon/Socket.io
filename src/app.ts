@@ -25,6 +25,8 @@ mongoose.connection.once('open', () => {
 import "./models/User";
 import "./models/Chatroom";
 import "./models/Message";
+const Message = mongoose.model("Message");
+const User = mongoose.model("User");
 
 // Routes
 import userRouter from "./routers/user";
@@ -73,10 +75,34 @@ io.use( async (socket: Socket | any, next: NextFunction | any) => {
     } catch(err) {}
 })
 
-io.on('connection', (socket) => {
+io.on('connection', (socket: Socket) => {
     console.log('connected: ' + socket.userId);
 
     socket.on('disconnect', () => {
         console.log("Disconnected: " + socket.userId);
+    })
+
+    socket.on("joinRoom", ({chatroomId}: {chatroomId: string}) => {
+        socket.join(chatroomId);
+        console.log("A user joined chatroom: " + chatroomId);
+    })
+
+    socket.on("leaveRoom", ({chatroomId}: {chatroomId: string}) => {
+        socket.leave(chatroomId);
+        console.log("A user left chatroom: " + chatroomId);
+    })
+
+    socket.on("chatroomMessage", async ({chatroomId, message}: {chatroomId: string, message: string}) => {
+        if(message.trim().length > 0){
+            const user = await User.findOne({_id: socket.userId});
+            const newMessage = new Message({chatroom: chatroomId, user: socket.userId, message})
+            io.to(chatroomId).emit("newMessage", {
+                message,
+                name: user.name,
+                userId: socket.userId,
+            });
+
+            await newMessage.save();
+        }
     })
 })
